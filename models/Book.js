@@ -4,8 +4,7 @@ const { Schema } = mongoose;
 
 const bookSchema = new Schema({
     user: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User', // links to the User model
+        type: String, 
         required: true,
         minLength: 4,
         maxLength: 20,
