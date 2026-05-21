@@ -1,9 +1,11 @@
-require("dotenv").config();
+// Load env variables FIRST — before anything else 
+const dotenv = require('dotenv') 
+dotenv.config()
+
 const express = require("express")
-const connectDB = require("./config/db");
+const connectDB = require("./config/database");
 
 const app = express()
-
 
 const port = process.env.PORT || 3000
 
