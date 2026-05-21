@@ -1,0 +1,22 @@
+{
+  "name": "reading-list-tracker",
+  "version": "1.0.0",
+  "description": "Save books you want to read, are reading, or have finished. Add ratings and notes. Filter by status or genre.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
