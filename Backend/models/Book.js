@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 
 const bookSchema = new Schema({
     user: {
-        type: String, 
+        type: mongoose.Schema.Types.ObjectId, // stores user's ID
+        ref: 'User', // points to User collection
         required: true,
         minLength: 4,
         maxLength: 20,
