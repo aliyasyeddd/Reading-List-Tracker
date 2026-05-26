@@ -12,9 +12,11 @@ const port = process.env.PORT || 3000
 //parse JSON request bodies
 app.use(express.json())
 
-app.get('/', (req, res) => {
-    res.send('welcome to express.js');
-});
+const authRouter = require("./routes/auth");
+
+//whenever request coming from slash go to authRouter and check if there is any matching route in authRouter
+app.use("/", authRouter)
+
 
 connectDB().then(() => {
     console.log("Database Connection established.... successfully");
