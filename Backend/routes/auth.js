@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 
 const authRouter = express.Router()
 
-
+//signup api - POST /signup
 authRouter.post('/signup', async (req, res) => {
     try {
         //1: Check if the data is valid ---
@@ -45,6 +45,31 @@ authRouter.post('/signup', async (req, res) => {
     }
 })
 
+//login api - POST /login
+authRouter.post("/login", async (req, res) => {
+    try {
+        const { emailId, password } = req.body;
+
+
+        const user = await User.findOne({ emailId: emailId })
+        if (!user) {
+            throw new Error("Invalid Credentials")
+        }
+
+        const isPasswordValid = await user.comparePassword(password)
+        if (isPasswordValid) {
+            const token = await user.getJWT();
+            res.cookie("token", token, {
+                expires: new Date(Date.now() + 8 * 3600000),
+            });
+             res.json({ message: "login Successful", data: user });
+        } else {
+            throw new Error("Invalid Credentials")
+        }
+    } catch (error) {
+        res.status(400).send("ERROR : " + error.message);
+    }
+})
 
 
 

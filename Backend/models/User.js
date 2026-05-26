@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
-const { Schema } = mongoose;
+const bcrypt = require("bcryptjs")
+
 
 const userSchema = new Schema({
     name: {
@@ -36,7 +38,6 @@ const userSchema = new Schema({
 // schema method to generate a JWT token for the user. This method will be called after the user is saved to the database in the signup route. The token will be sent to the frontend in the cookie so that the frontend can use that token to authenticate the user in subsequent requests.
 userSchema.methods.getJWT = async function () {
     const user = this;
-    //token??
     const token = jwt.sign(
         { id: user._id },
         process.env.JWT_SECRET_KEY,
@@ -44,5 +45,16 @@ userSchema.methods.getJWT = async function () {
     );
     return token;
 }
+
+userSchema.methods.comparePassword = async function (passwordInputByUser) {
+    const user = this;
+    const hashedPassword = user.password; // Get the hashed password from the database
+
+    // Use bcrypt to compare the input password with the hashed password
+    const isPasswordMatch = await bcrypt.compare(passwordInputByUser, hashedPassword);
+
+    return isPasswordMatch;
+}
+
 
 module.exports = mongoose.model('User', userSchema)

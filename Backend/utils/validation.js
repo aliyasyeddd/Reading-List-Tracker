@@ -8,7 +8,7 @@ const validateSignUpData = (req) => {
         throw new Error("Enter a valid email address")
     //checks: { minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1, returnScore: false, pointsPerUnique: 1, pointsPerRepeat: 0.5, pointsForContainingLower: 10, pointsForContainingUpper: 10, pointsForContainingNumber: 10, pointsForContainingSymbol: 10 }
     } else if (!validator.isStrongPassword(password)) {
-        throw new Error("Enter a strong password with at least 8 characters, including uppercase, lowercase, numbers, and symbols")
+        throw new Error("Enter a strong password with at least 8 characters, including 1 uppercase, 1 lowercase, 1 number, and 1 symbol")
     }
 }
 
