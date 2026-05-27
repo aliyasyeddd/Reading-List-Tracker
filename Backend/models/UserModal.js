@@ -10,6 +10,12 @@ const userSchema = new Schema({
         type: String,
         required: [true, 'Name is required'],
         trim: true, //to remove any whitespace from name 
+        // Custom validator to check the length of the name
+        validate(value) {
+        if (!validator.isLength(value, { min: 2, max: 50 })) {
+            throw new Error("Name must be between 2 and 50 characters");
+        }
+    }
     },
     emailId: {
         type: String,

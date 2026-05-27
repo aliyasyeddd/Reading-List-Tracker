@@ -13,15 +13,24 @@ const bookSchema = new Schema({
     title: {
         type: String,
         required: [true, 'Book Title is required'],
-        minLength: 4,
-        trim: true
+        trim: true,
+        // Custom validator to check the length of the book title
+        validate(value) {
+            if (!validator.isLength(value, { min: 4, max: 100 })) {
+                throw new Error("Title must be between 4 and 100 characters");
+            }
+        }
     },
     author: {
         type: String,
         required: [true, 'Author is required'],
-        minLength: 4,
-        maxLength: 20,
-        trim: true
+        trim: true,
+        // Custom validator to check the length of the author name
+        validate(value) {
+            if (!validator.isLength(value, { min: 4, max: 20 })) {
+                throw new Error("Author name must be between 4 and 20 characters");
+            }
+        }
     },
     genre: {
         type: String,
@@ -55,9 +64,20 @@ const bookSchema = new Schema({
     },
     rating: {
         type: Number,
-        min: 1,
-        max: 5,
+        min: [1, 'Rating must be at least 1'],
+        max: [5, 'Rating cannot exceed 5'],
         default: null,
+        validate: {
+            validator: function (value) {
+                // If status is 'finished', rating must be a number between 1 and 5
+                if (this.status === 'finished') {
+                    return typeof value === 'number' && value >= 1 && value <= 5;
+                }
+                // For other statuses, rating is optional (null is fine)
+                return true;
+            },
+            message: 'Rating (1–5) is required when status is finished',
+        }
     },
     notes: {
         type: String,
