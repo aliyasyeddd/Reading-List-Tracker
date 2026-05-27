@@ -77,5 +77,9 @@ const bookSchema = new Schema({
     }
 )
 
+// Compound index to optimize queries filtering by user and status
+// if we wont add index, it will be very slow to query books by user and status because it will have to scan the entire collection
+bookSchema.index({ user: 1, status: 1 });
+
 module.exports = mongoose.model('Book', bookSchema)
 

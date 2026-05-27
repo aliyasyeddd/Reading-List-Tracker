@@ -1,6 +1,6 @@
 const express = require('express');
 const { validateSignUpData } = require('../utils/validation');
-const User = require('../models/user');
+const User = require('../models/UserModal');
 const bcrypt = require("bcryptjs");
 
 
@@ -37,7 +37,7 @@ authRouter.post('/signup', async (req, res) => {
         });
 
         //8: Send back a success response to the frontend ---
-        res.json({ message: "User Added successfully!", data: savedUser });
+        res.json({ message: "User Added successfully!", data: { _id: savedUser._id, name: savedUser.name, email: savedUser.email } });
 
     } catch (error) {
         // Catches validation errors, DB errors, or JWT signing errors.
@@ -62,7 +62,7 @@ authRouter.post("/login", async (req, res) => {
             res.cookie("token", token, {
                 expires: new Date(Date.now() + 8 * 3600000),
             });
-             res.json({ message: "login Successful", data: user });
+            res.json({ message: "login Successful", data: { _id: user._id, name: user.name, emailId: user.emailId } });
         } else {
             throw new Error("Invalid Credentials")
         }
