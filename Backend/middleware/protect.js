@@ -13,11 +13,11 @@ const userAuth = async (req, res, next) => {
         // verify the token
         const decodedObject = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
-        // extract user id from decoded payload
-        const { _id } = decodedObject;
+        // extract user id from decoded payload (support `_id` or legacy `id`)
+        const userId = decodedObject._id || decodedObject.id;
 
         // look up user in DB
-        const user = await User.findById(_id);
+        const user = await User.findById(userId);
         if (!user) {
             throw new Error("User not found"); // id exists in token but not in DB
         }

@@ -16,11 +16,13 @@ app.use(cookieParser()); //middleware to parse the cookies and attach it to the 
 
 const authRouter = require("./routes/authRoutes");
 const bookRouter = require("./routes/bookRoutes");
+const profileRouter = require("./routes/profileRoutes");
 
 //whenever request coming from slash go to  authRouter and bookRouter to check if there is a matching route. 
 //If there is, it will be handled by that router. If not, it will continue to the next middleware
 app.use("/", authRouter);
 app.use("/", bookRouter);
+app.use("/", profileRouter);
 
 connectDB().then(() => {
     console.log("Database Connection established.... successfully");
