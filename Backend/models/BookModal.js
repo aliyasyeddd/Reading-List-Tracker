@@ -100,6 +100,7 @@ const bookSchema = new Schema({
 // if we wont add index, it will be very slow to query books by user and status because it will have to scan the entire collection
 bookSchema.index({ user: 1, status: 1 });
 
+// Pre-save hook to automatically set startedAt and finishedAt based on status changes
 bookSchema.pre('save', async function () {
     if (!this.isModified('status')) return;
 
