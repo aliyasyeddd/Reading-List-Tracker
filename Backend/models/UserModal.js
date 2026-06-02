@@ -53,8 +53,9 @@ userSchema.methods.getJWT = async function () {
 }
 
 userSchema.methods.comparePassword = async function (passwordInputByUser) {
-    const user = this;
-    const hashedPassword = user.password; // Get the hashed password from the database
+     // `this` refers to the user document on which this method is called. When we call user.comparePassword() in the login route, `this` will be the user document that we found in the database based on the email id provided by the user. So, `user` will have access to all the fields of that user document, including the hashed password stored in the database.
+     const user = this;
+     const hashedPassword = user.password; // Get the hashed password from the database
 
     // Use bcrypt to compare the input password with the hashed password
     const isPasswordMatch = await bcrypt.compare(passwordInputByUser, hashedPassword);

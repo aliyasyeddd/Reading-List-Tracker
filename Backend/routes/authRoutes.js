@@ -46,7 +46,7 @@ authRouter.post('/signup', async (req, res) => {
         });
 
         //8: Send back a success response to the frontend ---
-        res.json({ message: "User Added successfully!", data: { _id: savedUser._id, name: savedUser.name, email: savedUser.email } });
+        res.json({ message: "User Added successfully!", data: {  name: savedUser.name, email: savedUser.email } });
 
     } catch (error) {
         // Catches validation errors, DB errors, or JWT signing errors.
