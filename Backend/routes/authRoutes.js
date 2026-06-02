@@ -1,5 +1,5 @@
 const express = require('express');
-const { validateSignUpData } = require('../utils/validation');
+const { validateSignUpData } = require('../utils/profileValidation');
 const User = require('../models/UserModal');
 const bcrypt = require("bcryptjs");
 

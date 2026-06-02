@@ -16,7 +16,7 @@ const userAuth = async (req, res, next) => {
         const decodedObject = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
         // extract user id from decoded payload )
-        const userId = decodedObject._id ;
+        const userId = decodedObject._id
 
         // look up user in DB
         const user = await User.findById(userId);

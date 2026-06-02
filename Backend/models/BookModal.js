@@ -34,7 +34,6 @@ const bookSchema = new Schema({
     },
     genre: {
         type: String,
-        required: [true, 'genre is required'],
         trim: true
     },
     coverUrl: {
@@ -73,10 +72,10 @@ const bookSchema = new Schema({
                 if (this.status === 'finished') {
                     return typeof value === 'number' && value >= 1 && value <= 5;
                 }
-                // For other statuses, rating is optional (null is fine)
-                return true;
+                // For other statuses, rating must be null
+                return value === null;
             },
-            message: 'Rating (1–5) is required when status is finished',
+            message: 'Rating can only be set when status is "finished"',
         }
     },
     notes: {
@@ -100,6 +99,16 @@ const bookSchema = new Schema({
 // Compound index to optimize queries filtering by user and status
 // if we wont add index, it will be very slow to query books by user and status because it will have to scan the entire collection
 bookSchema.index({ user: 1, status: 1 });
+
+bookSchema.pre('save', async function () {
+    if (!this.isModified('status')) return;
+
+    if (this.status === 'reading') {
+        this.startedAt = new Date();
+    } else if (this.status === 'finished') {
+        this.finishedAt = new Date();
+    }
+});
 
 module.exports = mongoose.model('Book', bookSchema)
 

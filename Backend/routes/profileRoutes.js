@@ -1,6 +1,6 @@
 const express = require('express');
 const { userAuth } = require('../middleware/protect');
-const User = require('../models/UserModal');
+
 
 const profileRouter = express.Router()
 
