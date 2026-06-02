@@ -129,8 +129,6 @@ bookRouter.patch("/book/:id", userAuth, async (req, res) => {
             book[field] = req.body[field];
         });
 
-        console.log('status modified?', book.isModified('status'));  
-        console.log('current status:', book.status);
         await book.save();
 
         res.json({ message: "Book updated successfully!", data: book });
