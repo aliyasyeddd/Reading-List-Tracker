@@ -5,6 +5,8 @@ const userAuth = async (req, res, next) => {
     try {
         // extract token from cookies
         const { token } = req.cookies;
+
+
         // block unauthenticated requests early
         if (!token) {
             return res.status(401).send("Please Login!");
@@ -27,8 +29,15 @@ const userAuth = async (req, res, next) => {
 
         next(); // pass control to the next middleware
     } catch (error) {
-        // handles invalid token, expired token, user not found
-        res.status(400).send("ERROR: " + error.message);
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).send('Token expired. Please login again.');
+        }
+
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).send('Invalid token. Please login again.');
+        }
+
+        res.status(400).send('ERROR: ' + error.message);
     }
 }
 
