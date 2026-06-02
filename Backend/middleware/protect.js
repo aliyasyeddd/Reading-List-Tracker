@@ -14,7 +14,6 @@ const userAuth = async (req, res, next) => {
 
         // verify the token
         const decodedObject = jwt.verify(token, process.env.JWT_SECRET_KEY)
-        console.log("Decoded JWT payload:", decodedObject); // Debugging line to check the decoded token
 
         // extract user id from decoded payload )
         const userId = decodedObject._id ;
