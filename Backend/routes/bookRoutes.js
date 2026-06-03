@@ -31,6 +31,7 @@ bookRouter.post("/book", userAuth, async (req, res) => {
         })
 
         await newBook.save();
+
         res.json({ message: "Book added successfully!", data: newBook });
     } catch (err) {
         res.status(400).json("ERROR: " + err.message);
@@ -43,15 +44,49 @@ bookRouter.get("/books", userAuth, async (req, res) => {
         //1: Get the user id from req.user (set by userAuth middleware)
         const userId = req.user._id;
 
-        //2: Query the database for books that belong to this user
-        const books = await Book.find({ user: userId });
+        // 2: Start the filter with the userId so users only see their own books
+        const filter = { user: userId };
 
-        //3: If no books exist, send a friendly message instead of an empty array
-        if (books.length === 0) {
-            return res.status(200).json({ message: "No books found for this user.", data: [] });
+
+        // 3: If status was sent in the URL, add it to the filter
+        if (req.query.status) {
+            filter.status = { $regex: new RegExp(req.query.status, "i") };// case-insensitive regex match for status
         }
 
-        res.status(200).json(books);
+        // 4: If genre was sent in the URL, add it to the filter
+        if (req.query.genre) {
+            filter.genre = { $regex: new RegExp(req.query.genre, "i") };
+        }
+
+        // 5: If search query was sent in the URL, add it to the filter. We want to search by title or author, so we use $or with regex for case-insensitive partial matching.
+        if (req.query.search) {
+            //$or allows us to specify multiple conditions, and if any of them are true, the document will match.
+            //In this case, we want to match books where either the title or the author contains the search term. 
+            filter.$or = [
+                { title: { $regex: new RegExp(req.query.search, "i") } },
+                { author: { $regex: new RegExp(req.query.search, "i") } }
+            ];
+        }
+
+        // 6: Query the database for books that belong to this user
+        const books = await Book.find(filter);
+
+        // 7: If no books exist, send a friendly message instead of an empty array
+        if (books.length === 0) {
+            let message = "No books found";
+
+            if (req.query.status && req.query.genre) {
+                message = `No books found with status "${req.query.status}" and genre "${req.query.genre}"`;
+            } else if (req.query.status) {
+                message = `No books found with status "${req.query.status}"`.trim();
+            } else if (req.query.genre) {
+                message = `No books found with genre "${req.query.genre}"`.trim();
+            }
+
+            return res.status(200).json({ message });
+        }
+
+        res.status(200).json({ message: "Books fetched successfully", data: books });
 
     } catch (err) {
         res.status(400).json("ERROR: " + err.message);
